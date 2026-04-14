@@ -1,6 +1,6 @@
 "use client";
 
-function CookieDisplay({ onOpen }) {
+function CookieDisplay({ onOpen }: { onOpen: () => void }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
       <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>

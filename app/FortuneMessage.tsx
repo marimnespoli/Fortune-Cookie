@@ -1,6 +1,6 @@
 "use client";
 
-function FortuneMessage({ message, onReset }) {
+function FortuneMessage({ message, onReset }: { message: string; onReset: () => void }) {
   return (
     <div style={{ position: "relative", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh" }}>
       <img src="/assets/stars page 2.png" alt="Stars" style={{ position: "absolute", width: "100%", height: "100%", objectFit: "cover", top: 0, left: 0 }} />
