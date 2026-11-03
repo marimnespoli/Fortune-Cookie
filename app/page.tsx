@@ -1,18 +1,12 @@
 "use client";
-import { useState, useEffect } from 'react';
-import CookieDisplay from './CookieDisplay';
-import FortuneMessage from './FortuneMessage';
+import { useState, useEffect } from "react";
+import CookieDisplay from "./CookieDisplay";
+import FortuneMessage from "./FortuneMessage";
+import { fallbackFortunes } from "./fortunes";
 
-const fortunes = [
-  "A good laugh is sunshine in a house.",
-  "Your creativity will lead you to success.",
-  "Adventure awaits around the corner.",
-  "Kindness is a language everyone understands.",
-  "The best is yet to come.",
-  "You will find joy in unexpected places.",
-  "Hard work always pays off.",
-  "A smile is your greatest asset.",
-];
+function localFortune() {
+  return fallbackFortunes[Math.floor(Math.random() * fallbackFortunes.length)];
+}
 
 function Home() {
   const [opened, setOpened] = useState(false);
@@ -22,10 +16,16 @@ function Home() {
     document.title = opened ? "Your Fortune | Fortune Cookie" : "Fortune Cookie";
   }, [opened]);
 
-  function handleOpen() {
-    const random = fortunes[Math.floor(Math.random() * fortunes.length)];
-    setFortune(random);
+  async function handleOpen() {
+    setFortune("");
     setOpened(true);
+    try {
+      const res = await fetch("/api/fortune", { cache: "no-store" });
+      const data: { fortune?: string } = await res.json();
+      setFortune(data.fortune || localFortune());
+    } catch {
+      setFortune(localFortune());
+    }
   }
 
   function handleReset() {
