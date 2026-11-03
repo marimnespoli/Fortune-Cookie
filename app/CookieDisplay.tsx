@@ -4,8 +4,8 @@ function CookieDisplay({ onOpen }: { onOpen: () => void }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
       <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <img src="/assets/faixa do fortune cookie.png" alt="Fortune Cookie banner" width={400} />
-        <img src="/assets/Fortune cookie.svg" alt="Fortune Cookie" width={274} style={{ position: "absolute", top: "38%", left: "50%", transform: "translate(-50%, -50%)" }} />
+        <img src="/assets/faixa do fortune cookie.png" alt="Fortune Cookie banner" width={400} style={{ maxWidth: "100vw", height: "auto" }} />
+        <img src="/assets/Fortune cookie.svg" alt="Fortune Cookie" width={274} style={{ maxWidth: "68%", height: "auto", position: "absolute", top: "38%", left: "50%", transform: "translate(-50%, -50%)" }} />
       </div>
       <img src="/assets/cookie.svg" alt="Fortune cookie" width={250} />
       <img
