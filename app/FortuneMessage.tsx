@@ -41,8 +41,11 @@ function layout(message: string) {
 
 function FortuneMessage({ message, onReset }: { message: string; onReset: () => void }) {
   const { lines, fontSize } = layout(message);
-  const gap = fontSize * 1.25;
-  const offsets = lines.length === 1 ? [0] : [-gap / 2, gap / 2];
+  const gap = fontSize * 1.2;
+  // Safari ignores dominant-baseline on textPath, so instead of centering the
+  // glyphs vertically we lower the baseline by about a third of the font size.
+  const baselineShift = fontSize * 0.35;
+  const offsets = (lines.length === 1 ? [0] : [-gap / 2, gap / 2]).map((dy) => dy + baselineShift);
 
   return (
     <div style={{ position: "relative", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", overflow: "hidden" }}>
@@ -63,11 +66,11 @@ function FortuneMessage({ message, onReset }: { message: string; onReset: () => 
             ))}
           </defs>
           <text
-            fill="#333"
-            fontFamily="'Courier New', Courier, monospace"
+            fill="#222"
             fontSize={fontSize}
+            fontWeight={700}
             textAnchor="middle"
-            dominantBaseline="middle"
+            style={{ fontFamily: "var(--font-courier-prime), 'Courier New', Courier, monospace" }}
           >
             {lines.map((line, i) => (
               <textPath key={i} href={`#fortune-line-${i}`} startOffset="50%">
