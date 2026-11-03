@@ -3,10 +3,10 @@
 // Center line of the ribbon, in the banner SVG's coordinates (viewBox 0 0 1728 694).
 // The text is drawn along this curve so it bends with the paper.
 const RIBBON_CENTER = { x0: 520, y0: 306, c1x: 700, c1y: 335, c2x: 1000, c2y: 230, x1: 1265, y1: 268 };
-const USABLE_LENGTH = 720; // path length available for text, leaving some margin
+const USABLE_LENGTH = 620; // path length available for text, leaving some margin
 const CHAR_WIDTH = 0.6; // monospace glyph width, relative to font size
-const MAX_FONT = 50;
-const MIN_SINGLE_LINE_FONT = 44;
+const MAX_FONT = 36;
+const MIN_SINGLE_LINE_FONT = 30;
 
 function curve(offsetY: number) {
   const c = RIBBON_CENTER;
