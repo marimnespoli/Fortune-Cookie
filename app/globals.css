@@ -173,3 +173,108 @@ body {
   .glow-char { animation: none; opacity: 0; }
   .sparkle-star { opacity: 0.8; transform: translate(-50%, -50%) scale(0.8); }
 }
+
+/* ---------- Home (starry night) ---------- */
+
+.home-stage {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  padding: clamp(32px, 9vh, 120px) 16px 32px;
+}
+
+.home-stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.home-star {
+  position: absolute;
+  animation: home-twinkle 3.2s ease-in-out infinite;
+}
+
+@keyframes home-twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+.home-banner {
+  position: relative;
+  width: min(360px, 100%);
+}
+
+.home-banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.home-banner svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.home-cookie {
+  position: relative;
+  margin-top: clamp(16px, 5vh, 60px);
+  width: clamp(190px, 30vh, 260px);
+  height: clamp(170px, 27vh, 230px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: home-float 4s ease-in-out infinite;
+}
+
+.home-cookie img {
+  position: relative;
+  width: 96%;
+}
+
+.home-cookie-glow {
+  position: absolute;
+  width: 120%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(233, 196, 125, 0.35) 0%, rgba(233, 196, 125, 0) 65%);
+}
+
+@keyframes home-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.home-button {
+  position: relative;
+  margin-top: clamp(20px, 6vh, 70px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  filter: drop-shadow(0 0 18px rgba(233, 196, 125, 0.45));
+}
+
+.home-button img {
+  display: block;
+  width: 160px;
+}
+
+.home-hint {
+  position: relative;
+  margin: 18px 0 0;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 13px;
+  color: #8f8aa8;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-star, .home-cookie { animation: none; }
+  .home-star { opacity: 0.8; transform: none; }
+}
