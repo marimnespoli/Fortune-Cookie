@@ -33,3 +33,146 @@ body {
 .stars-twinkle {
   animation: twinkle 3s ease-in-out infinite;
 }
+
+/* ---------- Home (blue with grain and golden clouds) ---------- */
+
+.home-stage {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  padding: clamp(32px, 9vh, 120px) 16px 32px;
+}
+
+.home-grain {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.22;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.home-clouds {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: min(100%, 560px);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Serene back-and-forth drift while fading in and out like mist. */
+.home-cloud {
+  position: absolute;
+  animation-name: home-sway, home-mist;
+  animation-timing-function: ease-in-out, ease-in-out;
+  animation-iteration-count: infinite, infinite;
+}
+
+.home-cloud img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@keyframes home-sway {
+  0%, 100% { transform: translateX(-22px); }
+  50% { transform: translateX(22px); }
+}
+
+@keyframes home-mist {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+.home-banner {
+  position: relative;
+  width: min(360px, 100%);
+}
+
+.home-banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.home-banner svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.home-cookie {
+  position: relative;
+  margin-top: clamp(16px, 5vh, 60px);
+  width: clamp(190px, 30vh, 260px);
+  height: clamp(170px, 27vh, 230px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: home-float 4s ease-in-out infinite;
+}
+
+.home-cookie img {
+  position: relative;
+  width: 96%;
+}
+
+.home-cookie-glow {
+  position: absolute;
+  width: 120%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(233, 196, 125, 0.35) 0%, rgba(233, 196, 125, 0) 65%);
+}
+
+@keyframes home-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.home-button {
+  position: relative;
+  margin-top: clamp(20px, 6vh, 70px);
+  width: 170px;
+  height: 52px;
+  border-radius: 26px;
+  border: 1.5px solid #e9c47d;
+  background: transparent;
+  color: #e9c47d;
+  font-family: var(--font-shojumaru), cursive;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 0 18px rgba(233, 196, 125, 0.25);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home-button:hover {
+  background: rgba(233, 196, 125, 0.1);
+  box-shadow: 0 0 26px rgba(233, 196, 125, 0.45);
+}
+
+.home-button:focus-visible {
+  outline: 2px solid #f6dc9a;
+  outline-offset: 4px;
+}
+
+.home-hint {
+  position: relative;
+  margin: 18px 0 0;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 13px;
+  color: #8f8aa8;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-cloud, .home-cookie { animation: none; }
+}

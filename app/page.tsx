@@ -36,19 +36,15 @@ function Home() {
   return (
     <main style={{
       position: "relative",
-      backgroundImage: "url('/assets/background image.png')",
-      backgroundSize: "cover",
+      // Home is a solid blue; the fortune page keeps the paper background.
+      background: opened ? "url('/assets/background image.png') center / cover" : "#1b2254",
       minHeight: "100vh",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "flex-start",
-      paddingTop: opened ? "0px" : "120px"
+      overflow: "hidden",
     }}>
-      {!opened && <>
-        <style>{`@keyframes twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }`}</style>
-        <img src="/assets/stars.svg" alt="Stars" style={{ position: "absolute", width: "100%", height: "100vh", objectFit: "cover", top: 0, left: 0, pointerEvents: "none", animation: "twinkle 3s ease-in-out infinite" }} />
-      </>}
       {!opened && <CookieDisplay onOpen={handleOpen} />}
       {opened && <FortuneMessage message={fortune} onReset={handleReset} />}
     </main>
