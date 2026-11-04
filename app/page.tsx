@@ -38,7 +38,7 @@ function Home() {
     <main style={{
       position: "relative",
       background: "#1b2254",
-      minHeight: "100vh",
+      minHeight: "100cqh",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
