@@ -3,9 +3,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import SkyBackground from "./SkyBackground";
 import CrackingCookie from "./CrackingCookie";
 
-// Timeline (seconds after the page opens): the cookie shakes and cracks, its halves
-// slide off the sides, then the slip appears and the fortune is written on it.
-const WRITE_AT = 3.2;
+// Timeline (seconds after the page opens): the cookie shakes and cracks, pauses,
+// its halves drift apart and fade, then the slip unrolls and the fortune is written.
+const WRITE_AT = 4.4;
 const WRITE_DURATION = 2.4;
 
 const CHAR_WIDTH = 0.6; // Courier Prime glyphs are 0.6em wide
@@ -84,14 +84,10 @@ function Slip({ message, numbers, writeDelay }: { message: string; numbers: numb
               </text>
             </g>
             <g className="slip-quill" style={timing} aria-hidden="true">
-              <circle cx="16" cy={lineYs[0] - 1} r="7" fill="#ffe08a" opacity=".5" />
-              <path
-                transform={`translate(16 ${lineYs[0] - 1})`}
-                d="M0 -10 C1 -2 2 -1 10 0 C2 1 1 2 0 10 C-1 2 -2 1 -10 0 C-2 -1 -1 -2 0 -10 Z"
-                fill="#fff3c4"
-                stroke="#e0a93a"
-                strokeWidth=".8"
-              />
+              <g className="slip-glint" transform={`translate(16 ${lineYs[0] - 1})`}>
+                <path className="slip-glint-rays" d="M0 -15 C0.5 -3.2 1 -1 8.5 0 C1 1 0.5 3.2 0 15 C-0.5 3.2 -1 1 -8.5 0 C-1 -1 -0.5 -3.2 0 -15 Z" fill="#e2a93a" />
+                <circle r="1.8" fill="#ffffff" />
+              </g>
             </g>
           </>
         )}
@@ -101,7 +97,7 @@ function Slip({ message, numbers, writeDelay }: { message: string; numbers: numb
 }
 
 function FortuneMessage({ message, onReset }: { message: string; onReset: () => void }) {
-  const numbers = useMemo(luckyNumbers, []);
+  const numbers = useMemo(() => luckyNumbers(), []);
   const openedAt = useRef(0);
   const [writeDelay, setWriteDelay] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);

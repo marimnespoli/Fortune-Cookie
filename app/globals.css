@@ -237,16 +237,16 @@ body {
 
 .crack-half-l {
   transform-origin: 90% 60%;
-  animation: crack-open-l 0.6s cubic-bezier(.3, 1.5, .5, 1) 1.1s both, crack-leave-l 0.5s cubic-bezier(.5, 0, .75, 0) 1.75s forwards;
+  animation: crack-open-l 0.6s cubic-bezier(.3, 1.5, .5, 1) 1.1s both, crack-leave-l 1.3s ease-in-out 2.4s forwards;
 }
 
 .crack-half-r {
   transform-origin: 10% 60%;
-  animation: crack-open-r 0.6s cubic-bezier(.3, 1.5, .5, 1) 1.1s both, crack-leave-r 0.5s cubic-bezier(.5, 0, .75, 0) 1.75s forwards;
+  animation: crack-open-r 0.6s cubic-bezier(.3, 1.5, .5, 1) 1.1s both, crack-leave-r 1.3s ease-in-out 2.4s forwards;
 }
 
-.crack-crumbs-l { animation: crack-crumbs-l 0.5s cubic-bezier(.5, 0, .75, 0) 1.75s forwards; }
-.crack-crumbs-r { animation: crack-crumbs-r 0.5s cubic-bezier(.5, 0, .75, 0) 1.75s forwards; }
+.crack-crumbs-l { animation: crack-crumbs-l 1.3s ease-in-out 2.4s forwards; }
+.crack-crumbs-r { animation: crack-crumbs-r 1.3s ease-in-out 2.4s forwards; }
 
 @keyframes crack-wobble {
   0%, 100% { transform: rotate(0); }
@@ -267,23 +267,23 @@ body {
   100% { transform: translate(6px, 6px) rotate(6deg); }
 }
 
-/* The halves slide off the sides of the screen: no fading, no shrinking. */
+/* After a short pause the halves drift apart slowly while fading away. */
 @keyframes crack-leave-l {
   0% { transform: translate(-6px, 6px) rotate(-6deg); }
-  100% { transform: translate(-480px, 34px) rotate(-24deg); }
+  100% { transform: translate(-200px, 20px) rotate(-14deg); opacity: 0; }
 }
 
 @keyframes crack-leave-r {
   0% { transform: translate(6px, 6px) rotate(6deg); }
-  100% { transform: translate(480px, 34px) rotate(24deg); }
+  100% { transform: translate(200px, 20px) rotate(14deg); opacity: 0; }
 }
 
 @keyframes crack-crumbs-l {
-  to { transform: translate(-480px, 34px) rotate(-24deg); }
+  to { transform: translate(-200px, 20px) rotate(-14deg); opacity: 0; }
 }
 
 @keyframes crack-crumbs-r {
-  to { transform: translate(480px, 34px) rotate(24deg); }
+  to { transform: translate(200px, 20px) rotate(14deg); opacity: 0; }
 }
 
 .fortune-slip {
@@ -299,22 +299,23 @@ body {
   width: 100%;
   height: auto;
   overflow: visible;
-  filter: drop-shadow(0 0 18px rgba(233, 196, 125, 0.6)) drop-shadow(0 8px 12px rgba(0, 0, 0, 0.35));
+  filter: drop-shadow(0 0 14px rgba(233, 196, 125, 0.45));
   transform-origin: 50% 50%;
-  animation: slip-emerge 1s cubic-bezier(.2, .8, .2, 1) 2.2s both, slip-flutter 3.6s ease-in-out 3.2s infinite;
+  animation: slip-unroll 1.2s cubic-bezier(.3, .7, .2, 1) 3.2s both, slip-flutter 3.6s ease-in-out 4.6s infinite;
 }
 
-@keyframes slip-emerge {
-  0% { opacity: 0; transform: translate(0, 40px) scale(0.08) rotate(-20deg); }
-  20% { opacity: 1; }
-  70% { transform: translate(0, -6px) scale(1.04) rotate(-3deg); }
-  100% { opacity: 1; transform: translate(0, 0) scale(1) rotate(-2deg); }
+/* The slip unrolls from the middle out to its ends. The clip ends larger than the
+   slip so its glow is never cut into a box. */
+@keyframes slip-unroll {
+  0% { opacity: 0; clip-path: inset(0 50% 0 50%); }
+  12% { opacity: 1; }
+  100% { opacity: 1; clip-path: inset(-60px -60px -60px -60px); }
 }
 
 @keyframes slip-flutter {
-  0%, 100% { transform: rotate(-2deg) skewX(0deg); }
-  25% { transform: rotate(-2deg) skewX(2deg); }
-  75% { transform: rotate(-2deg) skewX(-2deg); }
+  0%, 100% { transform: skewX(0deg); }
+  25% { transform: skewX(2deg); }
+  75% { transform: skewX(-2deg); }
 }
 
 .slip-pen {
@@ -336,6 +337,22 @@ body {
 .slip-quill {
   opacity: 0;
   animation: slip-quill 2.4s linear both;
+}
+
+/* A thin four-point glint leads the writing, twinkling as it goes. */
+.slip-glint {
+  filter: drop-shadow(0 0 2px rgba(226, 169, 58, 0.9)) drop-shadow(0 0 6px rgba(233, 185, 73, 0.6));
+}
+
+.slip-glint-rays {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: slip-twinkle 0.5s ease-in-out infinite;
+}
+
+@keyframes slip-twinkle {
+  0%, 100% { transform: scale(0.75) rotate(0deg); }
+  50% { transform: scale(1.15) rotate(12deg); }
 }
 
 @keyframes slip-quill {
@@ -411,6 +428,6 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .crack-cookie { display: none; }
-  .fortune-slip-paper, .slip-pen, .slip-quill, .fortune-actions { animation: none; }
+  .fortune-slip-paper, .slip-pen, .slip-quill, .slip-glint-rays, .fortune-actions { animation: none; }
   .slip-pen.idle { transform: none; }
 }
