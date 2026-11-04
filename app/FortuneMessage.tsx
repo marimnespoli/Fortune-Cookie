@@ -83,11 +83,6 @@ function Slip({ message, numbers, writeDelay }: { message: string; numbers: numb
                 <textPath href="#slip-numbers" startOffset="50%">{numbersText}</textPath>
               </text>
             </g>
-            <g className="slip-quill" style={timing} aria-hidden="true">
-              <g className="slip-glint" transform={`translate(16 ${lineYs[0] - 1})`}>
-                <path className="slip-glint-rays" d="M0 -10 C0.25 -2 0.5 -0.5 5.5 0 C0.5 0.5 0.25 2 0 10 C-0.25 2 -0.5 0.5 -5.5 0 C-0.5 -0.5 -0.25 -2 0 -10 Z" fill="#d9a53a" />
-              </g>
-            </g>
           </>
         )}
       </svg>

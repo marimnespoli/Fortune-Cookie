@@ -336,30 +336,6 @@ body {
   to { transform: scaleX(1); }
 }
 
-.slip-quill {
-  opacity: 0;
-  animation: slip-quill 2.4s linear both;
-}
-
-/* A thin, delicate gold glint leads the writing, with a soft twinkle. */
-
-.slip-glint-rays {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: slip-twinkle 0.5s ease-in-out infinite;
-}
-
-@keyframes slip-twinkle {
-  0%, 100% { transform: scale(0.9); }
-  50% { transform: scale(1.05); }
-}
-
-@keyframes slip-quill {
-  0% { transform: translateX(0); opacity: 1; }
-  97% { opacity: 1; }
-  100% { transform: translateX(280px); opacity: 0; }
-}
-
 .fortune-actions {
   position: relative;
   margin-top: clamp(24px, 6cqh, 56px);
@@ -427,7 +403,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .crack-cookie { display: none; }
-  .fortune-slip-paper, .slip-pen, .slip-quill, .slip-glint-rays, .fortune-actions { animation: none; }
+  .fortune-slip-paper, .slip-pen, .fortune-actions { animation: none; }
   .slip-pen.idle { transform: none; }
 }
 
