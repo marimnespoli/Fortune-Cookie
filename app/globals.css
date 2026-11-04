@@ -253,16 +253,27 @@ body {
 .home-button {
   position: relative;
   margin-top: clamp(20px, 6vh, 70px);
-  padding: 0;
-  border: 0;
+  width: 170px;
+  height: 52px;
+  border-radius: 26px;
+  border: 1.5px solid #e9c47d;
   background: transparent;
+  color: #e9c47d;
+  font-family: var(--font-shojumaru), cursive;
+  font-size: 22px;
   cursor: pointer;
-  filter: drop-shadow(0 0 18px rgba(233, 196, 125, 0.45));
+  box-shadow: 0 0 18px rgba(233, 196, 125, 0.25);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.home-button img {
-  display: block;
-  width: 160px;
+.home-button:hover {
+  background: rgba(233, 196, 125, 0.1);
+  box-shadow: 0 0 26px rgba(233, 196, 125, 0.45);
+}
+
+.home-button:focus-visible {
+  outline: 2px solid #f6dc9a;
+  outline-offset: 4px;
 }
 
 .home-hint {

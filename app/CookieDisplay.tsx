@@ -45,7 +45,7 @@ function CookieDisplay({ onOpen }: { onOpen: () => void }) {
       </div>
 
       <button type="button" className="home-button" onClick={onOpen} aria-label="Open the cookie">
-        <img src="/assets/buttom.svg" alt="" />
+        click
       </button>
 
       <p className="home-hint">One new fortune, written just for you</p>
