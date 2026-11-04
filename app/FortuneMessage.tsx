@@ -1,17 +1,15 @@
 "use client";
+import { useEffect, useMemo, useRef, useState } from "react";
+import SkyBackground from "./SkyBackground";
+import CrackingCookie from "./CrackingCookie";
 
-// Center line of the ribbon, in the banner SVG's coordinates (viewBox 0 0 1728 694).
-// The text is drawn along this curve so it bends with the paper.
-const RIBBON_CENTER = { x0: 520, y0: 306, c1x: 700, c1y: 335, c2x: 1000, c2y: 230, x1: 1265, y1: 268 };
-const USABLE_LENGTH = 620; // path length available for text, leaving some margin
-const CHAR_WIDTH = 0.6; // monospace glyph width, relative to font size
-const MAX_FONT = 36;
-const MIN_SINGLE_LINE_FONT = 30;
+// Timeline (seconds after the page opens): the cookie shakes and cracks, its halves
+// slide off the sides, then the slip appears and the fortune is written on it.
+const WRITE_AT = 3.2;
+const WRITE_DURATION = 2.4;
 
-function curve(offsetY: number) {
-  const c = RIBBON_CENTER;
-  return `M ${c.x0} ${c.y0 + offsetY} C ${c.c1x} ${c.c1y + offsetY}, ${c.c2x} ${c.c2y + offsetY}, ${c.x1} ${c.y1 + offsetY}`;
-}
+const CHAR_WIDTH = 0.6; // Courier Prime glyphs are 0.6em wide
+const LINE_SPACE = 280; // usable width on the slip, in slip units
 
 // Split the message at the word break closest to the middle.
 function splitInTwo(text: string): string[] {
@@ -30,63 +28,140 @@ function splitInTwo(text: string): string[] {
   return best;
 }
 
-function layout(message: string) {
-  const fit = (chars: number) => Math.min(MAX_FONT, USABLE_LENGTH / (chars * CHAR_WIDTH));
-  if (fit(message.length) >= MIN_SINGLE_LINE_FONT) {
-    return { lines: [message], fontSize: fit(message.length) };
-  }
-  const lines = splitInTwo(message);
-  return { lines, fontSize: fit(Math.max(...lines.map((l) => l.length))) };
+function luckyNumbers() {
+  const picks = new Set<number>();
+  while (picks.size < 4) picks.add(1 + Math.floor(Math.random() * 49));
+  return [...picks].sort((a, b) => a - b);
+}
+
+// A gently wavy curve across the slip at height y.
+const wave = (y: number) => `M 20 ${y} C 92 ${y - 8}, 190 ${y + 8}, 300 ${y - 4}`;
+
+function Slip({ message, numbers, writeDelay }: { message: string; numbers: number[]; writeDelay: number | null }) {
+  const lines = message.length <= 38 ? [message] : splitInTwo(message);
+  const longest = Math.max(1, ...lines.map((l) => l.length));
+  const fontSize = Math.min(lines.length === 1 ? 12.5 : 12, LINE_SPACE / (longest * CHAR_WIDTH));
+  const height = lines.length === 1 ? 76 : 94;
+  const lineYs = lines.length === 1 ? [33] : [31, 48];
+  const numbersY = height - 23;
+  const outline = `M4 12 C 80 2, 180 20, 316 8 L 316 ${height - 14} C 180 ${height - 2}, 80 ${height - 20}, 4 ${height - 10} Z`;
+  const numbersText = `LUCKY NUMBERS  ${numbers.join(" · ")}`;
+  const timing = writeDelay === null ? undefined : { animationDelay: `${writeDelay}s` };
+
+  return (
+    <div className="fortune-slip">
+      <svg
+        className="fortune-slip-paper"
+        viewBox={`0 0 320 ${height}`}
+        role="img"
+        aria-label={message ? `${message} Lucky numbers ${numbers.join(", ")}.` : "Your fortune is on its way"}
+      >
+        <defs>
+          <linearGradient id="slip-paper" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="55%" stopColor="#fdf8ec" />
+            <stop offset="100%" stopColor="#efe4cc" />
+          </linearGradient>
+          {lineYs.map((y, i) => (
+            <path key={i} id={`slip-line-${i}`} d={wave(y)} />
+          ))}
+          <path id="slip-numbers" d={wave(numbersY)} />
+          <clipPath id="slip-writing">
+            <rect className={writeDelay === null ? "slip-pen idle" : "slip-pen"} style={timing} x="0" y="0" width="320" height={height} />
+          </clipPath>
+        </defs>
+        <path d={outline} fill="url(#slip-paper)" stroke="#e6d7b8" strokeWidth=".8" />
+        {writeDelay !== null && (
+          <>
+            <g clipPath="url(#slip-writing)" style={{ fontFamily: "var(--font-courier-prime), 'Courier New', monospace" }}>
+              <text fontSize={fontSize} fill="#3b2e22" textAnchor="middle">
+                {lines.map((line, i) => (
+                  <textPath key={i} href={`#slip-line-${i}`} startOffset="50%">{line}</textPath>
+                ))}
+              </text>
+              <text fontSize="8.5" fontWeight="700" letterSpacing="1" fill="#a3182b" textAnchor="middle">
+                <textPath href="#slip-numbers" startOffset="50%">{numbersText}</textPath>
+              </text>
+            </g>
+            <g className="slip-quill" style={timing} aria-hidden="true">
+              <circle cx="16" cy={lineYs[0] - 1} r="7" fill="#ffe08a" opacity=".5" />
+              <path
+                transform={`translate(16 ${lineYs[0] - 1})`}
+                d="M0 -10 C1 -2 2 -1 10 0 C2 1 1 2 0 10 C-1 2 -2 1 -10 0 C-2 -1 -1 -2 0 -10 Z"
+                fill="#fff3c4"
+                stroke="#e0a93a"
+                strokeWidth=".8"
+              />
+            </g>
+          </>
+        )}
+      </svg>
+    </div>
+  );
 }
 
 function FortuneMessage({ message, onReset }: { message: string; onReset: () => void }) {
-  const { lines, fontSize } = layout(message);
-  const gap = fontSize * 1.2;
-  // Safari ignores dominant-baseline on textPath, so instead of centering the
-  // glyphs vertically we lower the baseline by about a third of the font size.
-  const baselineShift = fontSize * 0.35;
-  const offsets = (lines.length === 1 ? [0] : [-gap / 2, gap / 2]).map((dy) => dy + baselineShift);
+  const numbers = useMemo(luckyNumbers, []);
+  const openedAt = useRef(0);
+  const [writeDelay, setWriteDelay] = useState<number | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    openedAt.current = performance.now();
+  }, []);
+
+  // The fortune may still be loading when the slip appears; start writing as soon
+  // as both the slip is in place and the text is here.
+  useEffect(() => {
+    if (!message || writeDelay !== null) return;
+    const elapsed = (performance.now() - openedAt.current) / 1000;
+    setWriteDelay(Math.max(0, WRITE_AT - elapsed));
+  }, [message, writeDelay]);
+
+  async function handleShare() {
+    const text = `${message} Lucky numbers: ${numbers.join(", ")}`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: "My fortune", text, url: window.location.href });
+        return;
+      }
+      await navigator.clipboard.writeText(`${text}\n${window.location.href}`);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // The person closed the share sheet; nothing to do.
+    }
+  }
+
+  const actionsDelay = writeDelay === null ? null : writeDelay + WRITE_DURATION + 0.2;
 
   return (
-    <div style={{ position: "relative", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", overflow: "hidden" }}>
-      <img src="/assets/stars page 2.png" alt="Stars" style={{ position: "absolute", width: "100%", height: "100%", objectFit: "cover", top: 0, left: 0 }} />
-      {/* The banner art only fills the middle of the SVG, so on small screens the
-          image is wider than the viewport and its empty margins are cropped. */}
-      <div style={{ position: "relative", width: "min(150vw, max(80vw, 1000px))", flexShrink: 0 }}>
-        <img src="/assets/faixa da frase.svg" alt="" style={{ width: "100%", display: "block" }} />
-        <svg
-          viewBox="0 0 1728 694"
-          role="img"
-          aria-label={message}
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
-        >
-          <defs>
-            {offsets.map((dy, i) => (
-              <path key={i} id={`fortune-line-${i}`} d={curve(dy)} />
-            ))}
-          </defs>
-          <text
-            fill="#222"
-            fontSize={fontSize}
-            fontWeight={700}
-            textAnchor="middle"
-            style={{ fontFamily: "var(--font-courier-prime), 'Courier New', Courier, monospace" }}
-          >
-            {lines.map((line, i) => (
-              <textPath key={i} href={`#fortune-line-${i}`} startOffset="50%">
-                {line}
-              </textPath>
-            ))}
-          </text>
-        </svg>
-        <img
-          src="/assets/buttom.svg"
-          alt="Click to try again"
-          width={140}
-          onClick={onReset}
-          style={{ position: "absolute", top: "58%", left: "50%", transform: "translateX(-50%)", cursor: "pointer" }}
-        />
+    <div className="fortune-stage">
+      <SkyBackground />
+
+      <p className="fortune-heading">your fortune</p>
+
+      <div className="fortune-scene">
+        <div className="fortune-glow" aria-hidden="true" />
+        <CrackingCookie />
+        <Slip message={message} numbers={numbers} writeDelay={writeDelay} />
       </div>
+
+      {actionsDelay !== null && (
+        <div className="fortune-actions" style={{ animationDelay: `${actionsDelay}s` }}>
+          <button type="button" className="fortune-again" onClick={onReset}>
+            another cookie
+          </button>
+          <button type="button" className="fortune-share" onClick={handleShare}>
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 3v12" />
+              <path d="M7 8l5-5 5 5" />
+              <path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" />
+            </svg>
+            <span>{copied ? "Copied!" : "Share this fortune"}</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

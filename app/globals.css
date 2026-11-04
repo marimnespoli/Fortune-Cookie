@@ -176,3 +176,241 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .home-cloud, .home-cookie { animation: none; }
 }
+
+/* ---------- Fortune page (cookie cracks, slip appears) ---------- */
+
+.fortune-stage {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  padding: clamp(40px, 11vh, 96px) 16px 32px;
+}
+
+.fortune-heading {
+  position: relative;
+  margin: 0;
+  font-family: var(--font-shojumaru), cursive;
+  font-size: 22px;
+  color: #e9c47d;
+}
+
+.fortune-scene {
+  position: relative;
+  margin-top: clamp(24px, 9vh, 90px);
+  width: min(350px, 100%);
+  height: 260px;
+}
+
+.fortune-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 360px;
+  height: 260px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(233, 196, 125, 0.28) 0%, rgba(233, 196, 125, 0) 68%);
+}
+
+.crack-cookie {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 300px;
+  height: 241px;
+  margin: -120px 0 0 -150px;
+  overflow: visible;
+  transform-origin: 50% 70%;
+  animation: crack-wobble 0.9s ease-in-out 0.2s both;
+}
+
+.crack-half-l,
+.crack-half-r,
+.crack-crumbs-l,
+.crack-crumbs-r {
+  transform-box: fill-box;
+}
+
+.crack-half-l {
+  transform-origin: 90% 60%;
+  animation: crack-open-l 0.6s cubic-bezier(.3, 1.5, .5, 1) 1.1s both, crack-leave-l 0.5s cubic-bezier(.5, 0, .75, 0) 1.75s forwards;
+}
+
+.crack-half-r {
+  transform-origin: 10% 60%;
+  animation: crack-open-r 0.6s cubic-bezier(.3, 1.5, .5, 1) 1.1s both, crack-leave-r 0.5s cubic-bezier(.5, 0, .75, 0) 1.75s forwards;
+}
+
+.crack-crumbs-l { animation: crack-crumbs-l 0.5s cubic-bezier(.5, 0, .75, 0) 1.75s forwards; }
+.crack-crumbs-r { animation: crack-crumbs-r 0.5s cubic-bezier(.5, 0, .75, 0) 1.75s forwards; }
+
+@keyframes crack-wobble {
+  0%, 100% { transform: rotate(0); }
+  15% { transform: rotate(-4deg); }
+  30% { transform: rotate(4deg); }
+  45% { transform: rotate(-3deg); }
+  60% { transform: rotate(3deg); }
+  75% { transform: rotate(-1deg); }
+}
+
+@keyframes crack-open-l {
+  0% { transform: translate(30px, 0) rotate(0); }
+  100% { transform: translate(-6px, 6px) rotate(-6deg); }
+}
+
+@keyframes crack-open-r {
+  0% { transform: translate(-30px, 0) rotate(0); }
+  100% { transform: translate(6px, 6px) rotate(6deg); }
+}
+
+/* The halves slide off the sides of the screen: no fading, no shrinking. */
+@keyframes crack-leave-l {
+  0% { transform: translate(-6px, 6px) rotate(-6deg); }
+  100% { transform: translate(-480px, 34px) rotate(-24deg); }
+}
+
+@keyframes crack-leave-r {
+  0% { transform: translate(6px, 6px) rotate(6deg); }
+  100% { transform: translate(480px, 34px) rotate(24deg); }
+}
+
+@keyframes crack-crumbs-l {
+  to { transform: translate(-480px, 34px) rotate(-24deg); }
+}
+
+@keyframes crack-crumbs-r {
+  to { transform: translate(480px, 34px) rotate(24deg); }
+}
+
+.fortune-slip {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(350px, 100%);
+  transform: translate(-50%, -50%);
+}
+
+.fortune-slip-paper {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 18px rgba(233, 196, 125, 0.6)) drop-shadow(0 8px 12px rgba(0, 0, 0, 0.35));
+  transform-origin: 50% 50%;
+  animation: slip-emerge 1s cubic-bezier(.2, .8, .2, 1) 2.2s both, slip-flutter 3.6s ease-in-out 3.2s infinite;
+}
+
+@keyframes slip-emerge {
+  0% { opacity: 0; transform: translate(0, 40px) scale(0.08) rotate(-20deg); }
+  20% { opacity: 1; }
+  70% { transform: translate(0, -6px) scale(1.04) rotate(-3deg); }
+  100% { opacity: 1; transform: translate(0, 0) scale(1) rotate(-2deg); }
+}
+
+@keyframes slip-flutter {
+  0%, 100% { transform: rotate(-2deg) skewX(0deg); }
+  25% { transform: rotate(-2deg) skewX(2deg); }
+  75% { transform: rotate(-2deg) skewX(-2deg); }
+}
+
+.slip-pen {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: slip-write 2.4s linear both;
+}
+
+.slip-pen.idle {
+  animation: none;
+  transform: scaleX(0);
+}
+
+@keyframes slip-write {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.slip-quill {
+  opacity: 0;
+  animation: slip-quill 2.4s linear both;
+}
+
+@keyframes slip-quill {
+  0% { transform: translateX(0); opacity: 1; }
+  97% { opacity: 1; }
+  100% { transform: translateX(280px); opacity: 0; }
+}
+
+.fortune-actions {
+  position: relative;
+  margin-top: clamp(24px, 6vh, 56px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  animation: fortune-fade-up 0.6s ease-out both;
+}
+
+@keyframes fortune-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.fortune-again {
+  width: 210px;
+  height: 52px;
+  border-radius: 26px;
+  border: 1.5px solid #e9c47d;
+  background: rgba(27, 34, 84, 0.55);
+  color: #e9c47d;
+  font-family: var(--font-shojumaru), cursive;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 0 18px rgba(233, 196, 125, 0.25);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fortune-again:hover {
+  background: rgba(233, 196, 125, 0.1);
+  box-shadow: 0 0 26px rgba(233, 196, 125, 0.45);
+}
+
+/* Share is a quiet text link, not a second button competing with the main action. */
+.fortune-share {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  background: transparent;
+  color: #e9c47d;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.fortune-share svg {
+  width: 17px;
+  height: 17px;
+}
+
+.fortune-share span {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.fortune-again:focus-visible,
+.fortune-share:focus-visible {
+  outline: 2px solid #f6dc9a;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crack-cookie { display: none; }
+  .fortune-slip-paper, .slip-pen, .slip-quill, .fortune-actions { animation: none; }
+  .slip-pen.idle { transform: none; }
+}
