@@ -217,12 +217,14 @@ body {
 }
 
 .crack-cookie {
+  /* Same size as the cookie on the home screen. */
+  --cookie-w: calc(clamp(190px, 30cqh, 260px) * 0.96);
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 300px;
-  height: 241px;
-  margin: -120px 0 0 -150px;
+  width: var(--cookie-w);
+  height: calc(var(--cookie-w) * 342 / 426);
+  margin: calc(var(--cookie-w) * -171 / 426) 0 0 calc(var(--cookie-w) / -2);
   overflow: visible;
   transform-origin: 50% 70%;
   animation: crack-wobble 0.9s ease-in-out 0.2s both;
@@ -258,12 +260,12 @@ body {
 }
 
 @keyframes crack-open-l {
-  0% { transform: translate(30px, 0) rotate(0); }
+  0% { transform: translate(0, 0) rotate(0); }
   100% { transform: translate(-6px, 6px) rotate(-6deg); }
 }
 
 @keyframes crack-open-r {
-  0% { transform: translate(-30px, 0) rotate(0); }
+  0% { transform: translate(0, 0) rotate(0); }
   100% { transform: translate(6px, 6px) rotate(6deg); }
 }
 
