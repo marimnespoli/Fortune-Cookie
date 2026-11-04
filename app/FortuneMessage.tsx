@@ -85,8 +85,7 @@ function Slip({ message, numbers, writeDelay }: { message: string; numbers: numb
             </g>
             <g className="slip-quill" style={timing} aria-hidden="true">
               <g className="slip-glint" transform={`translate(16 ${lineYs[0] - 1})`}>
-                <path className="slip-glint-rays" d="M0 -15 C0.5 -3.2 1 -1 8.5 0 C1 1 0.5 3.2 0 15 C-0.5 3.2 -1 1 -8.5 0 C-1 -1 -0.5 -3.2 0 -15 Z" fill="#e2a93a" />
-                <circle r="1.8" fill="#ffffff" />
+                <path className="slip-glint-rays" d="M0 -10 C0.25 -2 0.5 -0.5 5.5 0 C0.5 0.5 0.25 2 0 10 C-0.25 2 -0.5 0.5 -5.5 0 C-0.5 -0.5 -0.25 -2 0 -10 Z" fill="#d9a53a" />
               </g>
             </g>
           </>
