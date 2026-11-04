@@ -142,13 +142,13 @@ function FortuneMessage({ message, onReset }: { message: string; onReset: () => 
           <button type="button" className="fortune-again" onClick={onReset}>
             another cookie
           </button>
-          <button type="button" className="fortune-share" onClick={handleShare}>
+          <button type="button" className="fortune-share" onClick={handleShare} aria-label="Share this fortune">
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 3v12" />
               <path d="M7 8l5-5 5 5" />
               <path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" />
             </svg>
-            <span>{copied ? "Copied!" : "Share this fortune"}</span>
+            <span>{copied ? "COPIED" : "SHARE"}</span>
           </button>
         </div>
       )}
